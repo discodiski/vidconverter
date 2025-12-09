@@ -14,34 +14,35 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-        
+    # IMPORTANTE: No usamos actions/setup-python porque necesitamos PyGObject del sistema (apt)
+    # y compilarlo desde pip suele fallar o tardar mucho. Usaremos el python del sistema.
+    
     - name: Install System Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 libgirepository1.0-dev libcairo2-dev ffmpeg
+        sudo apt-get install -y python3-venv python3-pip python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 libgirepository1.0-dev libcairo2-dev ffmpeg xvfb
+        
+    - name: Set up Virtual Environment with System Site Packages
+      run: |
+        # Creamos venv con acceso a paquetes del sistema (PyGObject)
+        python3 -m venv venv --system-site-packages
         
     - name: Install Python dependencies
       run: |
+        . venv/bin/activate
         python -m pip install --upgrade pip
+        # install flake8 inside venv
         python -m pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        # PyGObject usually needs to be installed via pip in venv if system packages aren't enough, 
-        # but for CI with system site packages it's different. 
-        # Here we install pygobject to link against system libs
-        pip install pygobject
         
     - name: Lint with flake8
       run: |
+        . venv/bin/activate
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
@@ -49,8 +50,7 @@ jobs:
         
     - name: Test import (Smoke Test)
       run: |
-        # Verify that the main script can be imported without syntax errors
-        # We set log level to suppress GUI init errors if no display is present
-        export DISPLAY=:99
-        # Basic syntax check since we can't fully run GUI app in headless CI easily without xvfb
-        python3 -m py_compile videoparaestados.py
+        . venv/bin/activate
+        # Usamos xvfb-run para simular una pantalla, permitiendo inicializar GTK si fuera necesario
+        # y probamos que el archivo sea importable (no solo sintaxis)
+        xvfb-run python3 -c "import videoparaestados; print('Successfully imported videoparaestados')"
