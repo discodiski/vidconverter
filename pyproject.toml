@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "videoparaestados"
+version = "2.0.0"
+description = "Convierte videos de Instagram para Estados de WhatsApp (GTK4/Libadwaita)"
+readme = "README.md"
+license = {text = "GPL-3.0"}
+authors = [
+    {name = "Discaury Salas", email = "discodiski@users.noreply.github.com"}
+]
+keywords = ["video", "converter", "ffmpeg", "whatsapp", "instagram", "gtk4", "libadwaita", "linux"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video :: Conversion",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "PyGObject>=3.42.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/discodiski/vidconverter"
+Repository = "https://github.com/discodiski/vidconverter.git"
+Issues = "https://github.com/discodiski/vidconverter/issues"
+
+[project.gui-scripts]
+videoparaestados = "videoparaestados:main"
+
+[tool.setuptools]
+py-modules = ["videoparaestados"]
