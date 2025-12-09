@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Video para Estados
+Comment=Convierte videos de Instagram para Estados de WhatsApp
+Exec=python3 /home/dissa/Documentos/antigravity/vidconverter/videoparaestados.py
+Icon=com.videoparaestados.app
+Terminal=false
+Type=Application
+Categories=AudioVideo;Video;GTK;
+Keywords=video;converter;whatsapp;instagram;estados;
+StartupNotify=true
